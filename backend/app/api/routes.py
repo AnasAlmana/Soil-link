@@ -24,6 +24,19 @@ class CompostingInput(BaseModel):
     gps_longitude: float
 
 class PredictionResponse(BaseModel):
+    timestamp: str
+    event: str
+    temperature_C: float
+    CO2_ppm: float
+    moisture_percent: float
+    mass_loss_percent: float
+    pH: float
+    forecast_temp_C: float
+    forecast_humidity_percent: float
+    forecast_condition: str
+    humidity_sensor_percent: float
+    gps_latitude: float
+    gps_longitude: float
     remaining_hours: float
 
 @router.post("/predict", response_model=PredictionResponse)
@@ -41,7 +54,24 @@ async def predict_composting(input_data: CompostingInput):
         with open(LATEST_FILE, 'w') as f:
             json.dump({'input': input_dict, 'prediction': prediction}, f)
         
-        return PredictionResponse(remaining_hours=prediction)
+        # Create response with all fields, ensuring timestamp is included
+        response_data = {
+            'timestamp': input_data.timestamp,  # Explicitly include timestamp
+            'event': input_data.event,
+            'temperature_C': input_data.temperature_C,
+            'CO2_ppm': input_data.CO2_ppm,
+            'moisture_percent': input_data.moisture_percent,
+            'mass_loss_percent': input_data.mass_loss_percent,
+            'pH': input_data.pH,
+            'forecast_temp_C': input_data.forecast_temp_C,
+            'forecast_humidity_percent': input_data.forecast_humidity_percent,
+            'forecast_condition': input_data.forecast_condition,
+            'humidity_sensor_percent': input_data.humidity_sensor_percent,
+            'gps_latitude': input_data.gps_latitude,
+            'gps_longitude': input_data.gps_longitude,
+            'remaining_hours': prediction
+        }
+        return PredictionResponse(**response_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

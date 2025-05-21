@@ -1,0 +1,15 @@
+{
+    "timestamp": "2024-03-20T10:00:00",
+    "event": "measurement",
+    "temperature_C": 30.5,
+    "CO2_ppm": 1200,
+    "moisture_percent": 60.0,
+    "mass_loss_percent": 15.0,
+    "pH": 7.2,
+    "forecast_temp_C": 26.0,
+    "forecast_humidity_percent": 65.0,
+    "forecast_condition": "sunny",
+    "humidity_sensor_percent": 62.0,
+    "gps_latitude": 24.7136,
+    "gps_longitude": 46.6753
+}
