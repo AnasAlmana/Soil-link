@@ -1,8 +1,12 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from ..core.predictor import predict_with_time_gps
+import json
+from pathlib import Path
 
 router = APIRouter()
+
+LATEST_FILE = Path('latest_prediction.json')
 
 class CompostingInput(BaseModel):
     timestamp: str
@@ -31,6 +35,23 @@ async def predict_composting(input_data: CompostingInput):
         # Get prediction
         prediction = predict_with_time_gps(input_dict)
         
+        # Save latest input and prediction
+        print('Saving latest prediction:', input_dict, prediction)
+        print('Saving to:', LATEST_FILE.resolve())
+        with open(LATEST_FILE, 'w') as f:
+            json.dump({'input': input_dict, 'prediction': prediction}, f)
+        
         return PredictionResponse(remaining_hours=prediction)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/latest-prediction")
+async def get_latest_prediction():
+    print('Reading latest prediction from:', LATEST_FILE.resolve())
+    if not LATEST_FILE.exists():
+        print('File does not exist!')
+        raise HTTPException(status_code=404, detail="No prediction yet")
+    with open(LATEST_FILE) as f:
+        data = json.load(f)
+    print('Loaded data:', data)
+    return data 
