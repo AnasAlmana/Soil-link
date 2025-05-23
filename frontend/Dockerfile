@@ -9,7 +9,6 @@ RUN npm run build
 FROM node:20-alpine AS prod
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./
-RUN npm install -g vite
+RUN npm install -g serve
 EXPOSE 8080
-CMD ["vite", "preview", "--host", "0.0.0.0", "--port", "8080"] 
+CMD ["serve", "-s", "dist", "-l", "8080"]
