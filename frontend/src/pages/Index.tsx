@@ -16,7 +16,8 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { mockSensorReading, mockHistoryData, getSensorStatus, getSensorInfo } from '@/utils/mockData';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+// In development, use /api, in Docker use the full backend URL without trailing slash
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
 
 const Index = () => {
   const [sensorData, setSensorData] = useState(mockSensorReading);
