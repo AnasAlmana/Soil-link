@@ -16,6 +16,8 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { mockSensorReading, mockHistoryData, getSensorStatus, getSensorInfo } from '@/utils/mockData';
 
+const API_BASE_URL = "http://backend:8000";
+
 const Index = () => {
   const [sensorData, setSensorData] = useState(mockSensorReading);
   const [historyData, setHistoryData] = useState(mockHistoryData);
@@ -38,7 +40,7 @@ const Index = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/v1/latest-prediction');
+      const response = await fetch(`${API_BASE_URL}/api/v1/latest-prediction`);
       if (!response.ok) {
         throw new Error('Failed to fetch sensor data');
       }
